@@ -79,6 +79,7 @@ def refine_url(url):
 def save_pictures_html(pic_html, pic_folder):
         
         
+    n_download = 0
     pic = JIANDAN + "/" + pic_folder
     if not os.path.exists(pic):
         logger.info("pic not exists")
@@ -111,15 +112,17 @@ def save_pictures_html(pic_html, pic_folder):
                     data = response.content
                     with open(pic_path, "wb") as f:
                         f.write(response.content)
+                        n_download += 1
             else:
                 logger.info("file %s exists"%pic_path)
+    return n_download
                 
 def save_pictures_url(url, pic_folder):
     
     with requests.get(url, headers=headers) as response:
         data = response.content
         pic_html = data.decode("utf-8")
-        save_pictures_html(pic_html, pic_folder)
+        return save_pictures_html(pic_html, pic_folder)
     
       
 def pull_pictures():
@@ -127,13 +130,17 @@ def pull_pictures():
     while True:
         print("pull picutres...")
         try:
-            save_pictures_url("http://jandan.net/ooxx", "ooxx")
+            n_download = save_pictures_url("http://jandan.net/ooxx", "ooxx")
+            print("%d pictures for %s, sleeping..."%(n_download, "ooxx"))
             time.sleep(100 + random.randint(0, 100))
-            save_pictures_url("http://jandan.net/zoo", "zoo")
+            n_download = save_pictures_url("http://jandan.net/zoo", "zoo")
+            print("%d pictures for %s, sleeping..."%(n_download, "zoo"))
             time.sleep(100 + random.randint(0, 100))
-            save_pictures_url("http://jandan.net/girl", "girl")
+            n_download = save_pictures_url("http://jandan.net/girl", "girl")
+            print("%d pictures for %s, sleeping..."%(n_download, "girl"))
             time.sleep(100 + random.randint(0, 100))
-            save_pictures_url("http://jandan.net/pic", "pic")
+            n_download = save_pictures_url("http://jandan.net/pic", "pic")
+            print("%d pictures for %s, sleeping..."%(n_download, "pic"))
             time.sleep(100 + random.randint(0, 100))
         except ConnectionError as e:
             logger.error(str(e))
