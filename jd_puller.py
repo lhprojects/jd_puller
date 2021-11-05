@@ -142,13 +142,17 @@ def pull_pictures():
             n_download = save_pictures_url("http://jandan.net/pic", "pic")
             print("%d pictures for %s, sleeping..."%(n_download, "pic"))
             time.sleep(100 + random.randint(0, 100))
+        except KeyboardInterrupt as e:
+            logger.error(str(e))
+            print(str(e))
+            break
         except ConnectionError as e:
             logger.error(str(e))
             time.sleep(200)
-            print(stre(e))
-        except HTTPConnectionPool as e:
+            print(str(e))
+        except Exception as e:
             logger.error(str(e))
             time.sleep(200)
-            print(stre(e))
+            print(str(e))
 
 pull_pictures()
